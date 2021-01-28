@@ -1,6 +1,8 @@
 
 
 
+
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -17,41 +19,28 @@ public class r3{
 	//client görevi
 	static Socket serverSocket1; 
 	static Socket serverSocket2;       
-       static  DataInputStream dataInputStream1;
-       static  DataInputStream dataInputStream2;
+	static DataInputStream dataInputStream;
 	
 
 	//server görevi
 	static ServerSocket rserverSocket;	
 	static Socket rclientSocket = new Socket();
-	static String mesaj="";
+	
 	static DataOutputStream dataOutputStream;
 	
 
     public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
-Random r = new Random();
+
   //r1 bağlantı istediği 
  serverSocket1 = new Socket("localhost", 1451);
 //r2 bağlantı isteği
 serverSocket2 = new Socket("localhost", 1452);
 //kendi server
- rserverSocket = new ServerSocket(1453);    
-  
+ rserverSocket = new ServerSocket(1453);
+ //client bağlantı isteği bekliyor
+  rclientSocket = rserverSocket.accept();
 
-
-        ArrayList<Socket> baglanlar = new ArrayList<>();
-
-        while(true) {
-        	rclientSocket = rserverSocket.accept();
-        	baglanlar.add(rclientSocket);
-        	if(baglanlar.size()==2) {
-        		break;
-        	}
-        	
-        }
-
-
-System.out.println("Görevler baslatiliyor");
+//r1 den gelen verileri kontrol ediyor
 TimerTask task1 = new TimerTask() {
 	
 	@Override
@@ -60,9 +49,13 @@ TimerTask task1 = new TimerTask() {
 		
 		try {
 			
-				//System.out.println("R1 MESAJ:"+new DataInputStream(serverSocket1.getInputStream()).readUTF());
-				dataOutputStream = new DataOutputStream(baglanlar.get(r.nextInt(2)).getOutputStream());
-				dataOutputStream.writeUTF(new DataInputStream(serverSocket1.getInputStream()).readUTF()+"->r3 ");
+				//cliente veri gönderme nesnesi hazırlanıyor
+				dataOutputStream = new DataOutputStream(rclientSocket.getOutputStream());
+				
+				DataInputStream dataInputStream= new DataInputStream(serverSocket1.getInputStream());
+				String mesaj=dataInputStream.readUTF();
+				//veri gönderiyor
+				dataOutputStream.writeUTF(mesaj+"->r3 ");
 			} catch (IOException e) {
 			e.printStackTrace();
 			}	
@@ -70,7 +63,7 @@ TimerTask task1 = new TimerTask() {
 		
 	
 };
-
+//r2 den gelen verileri kontrol ediyor
 TimerTask task2 = new TimerTask() {
 	
 	@Override
@@ -78,10 +71,14 @@ TimerTask task2 = new TimerTask() {
 	
 		
 		try {
-				
-				dataOutputStream = new DataOutputStream(baglanlar.get(r.nextInt(2)).getOutputStream());
-				dataOutputStream.writeUTF(new DataInputStream(serverSocket2.getInputStream()).readUTF()+"->r3 ");								
-	
+			
+			//cliente veri gönderme nesnesi hazırlanıyor
+			dataOutputStream = new DataOutputStream(rclientSocket.getOutputStream());
+			
+			DataInputStream dataInputStream= new DataInputStream(serverSocket2.getInputStream());
+			String mesaj=dataInputStream.readUTF();
+			//veri gönderiyor
+			dataOutputStream.writeUTF(mesaj+"->r3 ");
 			} catch (IOException e) {
 			e.printStackTrace();
 			}

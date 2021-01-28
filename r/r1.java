@@ -23,54 +23,28 @@ public class r1{
 	static Socket rclientSocket = new Socket();
 	static String mesaj;
 	static DataOutputStream dataOutputStream;
-	static boolean conn=false;
+
 	
 	
-static int a =0;
+
     public static void main(String[] args) throws UnknownHostException, IOException {
 
-    	//Queue<String> kuyruk = new LinkedList<>();
+   //servere bağlanıyor
  serverSocket = new Socket("localhost", 1450);
- rserverSocket = new ServerSocket(1451);      
-        ArrayList<Socket> bağlanlar = new ArrayList<>();
-        while(true) {
-        	rclientSocket = rserverSocket.accept();
-        	bağlanlar.add(rclientSocket);
-        	if(bağlanlar.size()==1) {
-        		break;
-        	}
-        	
-        }
-while(true){
+ rserverSocket = new ServerSocket(1451);
+//r3 bekleniyor      
+rclientSocket = rserverSocket.accept();
+while(true){		
+	dataInputStream = new DataInputStream(serverSocket.getInputStream());
 	
-		
-		/*if(!rclientSocket.isBound()) {
-			 rclientSocket = rserverSocket.accept();
-		}*/
-
-System.out.println("dinleniyor");
-dataInputStream = new DataInputStream(serverSocket.getInputStream());
-			System.out.println("geldi");
-            mesaj = dataInputStream.readUTF();
-           /* boolean state= kuyruk.offer(mesaj);
-            if(!state) {
-            	continue;
-            }*/
-            System.out.println("Alınan mesaj: " + mesaj);
-        
-                			try {							
-							System.out.println("bulundu");
-						//	String mesaj= kuyruk.poll();
-							for(Socket rclientSocket : bağlanlar) {
-								  dataOutputStream = new DataOutputStream(rclientSocket.getOutputStream());
-		                			
-		                			dataOutputStream.writeUTF( mesaj+"->r1 ");
-							}
-                		  
-                			System.out.println("gönderildi");
-                			
-                		
-							} catch (IOException e) {
+          mesaj = dataInputStream.readUTF();
+       
+		try {							
+					
+						dataOutputStream = new DataOutputStream(rclientSocket.getOutputStream());
+						dataOutputStream.writeUTF( mesaj+"->r1 ");
+	
+						} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}               		                			
