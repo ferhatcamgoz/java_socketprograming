@@ -23,7 +23,7 @@ public class server{
         	 clientSocket = serverSocket.accept();
         	baglanlar.add(clientSocket);
 
-        	if(baglanlar.size()==2) {
+        	if(baglanlar.size()==3) {
 System.out.println("Bağlantılar tamam");
         		break;
         	}   	
@@ -32,7 +32,7 @@ Scanner scan4= new Scanner(System.in);
 String tetik= scan4.next();
 while(true){
 //r1 veya r2'den birine rastegele veri gönderimine hazırlanıyor
-dataOutputStream = new DataOutputStream(baglanlar.get(r.nextInt(2)).getOutputStream());
+dataOutputStream = new DataOutputStream(baglanlar.get(r.nextInt(3)).getOutputStream());
 int g = r.nextInt(100);
 System.out.println("uretilen sayi:"+g);
 //gönderiliyor
