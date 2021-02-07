@@ -91,7 +91,7 @@ int k=0;
             System.out.println("uretilen sayi:"+g);
 //gönderiliyor
             dataOutputStream.writeUTF(g+": s->");
-//500 milisaniye bekliyor
+//5000 milisaniye bekliyor
             Thread.sleep(r.nextInt(5000));
 
 

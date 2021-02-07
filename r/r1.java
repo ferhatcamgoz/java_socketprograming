@@ -1,13 +1,12 @@
 
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -23,6 +22,7 @@ public class r1{
     static Socket serverclient = new Socket();
     static String mesaj;
     static DataOutputStream dataOutputStream;
+    static int randomtask=1000;
 
     public static void main(String[] args) throws UnknownHostException, IOException {
           BlockingQueue kuyruk = new ArrayBlockingQueue<>(10);
@@ -34,31 +34,75 @@ public class r1{
         serverclient = rserverSocket.accept();
         //client bağlantı isteği bekliyor
         client = rserverSocket.accept();
-        while(true){
-            dataInputStream = new DataInputStream(serverSocket.getInputStream());
-
-            mesaj = dataInputStream.readUTF();
-            if(mesaj.equals("q")){
-                dataOutputStream = new DataOutputStream(serverclient.getOutputStream());
-                dataOutputStream.writeUTF(String.valueOf(new Random().nextInt(10)));
-            }
-            else {
-
-                kuyruk.add(mesaj);
 
 
+        TimerTask task1 = new TimerTask() {
+
+            @Override
+            public void run() {
                 try {
+                    DataInputStream dataInputStream1 = new DataInputStream(serverSocket.getInputStream());
+                     mesaj = dataInputStream1.readUTF();
 
-                    dataOutputStream = new DataOutputStream(client.getOutputStream());
-                    dataOutputStream.writeUTF( kuyruk.poll()+"->r1 ");
-
-                } catch (Exception e) {
-
+                    System.out.println(mesaj);
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-        }
 
-    }
+                if (mesaj.equals("q")) {
+                    try {
+                        dataOutputStream = new DataOutputStream(serverclient.getOutputStream());
+                        dataOutputStream.writeUTF(String.valueOf(kuyruk.size()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-}
+                } else {
+
+                    kuyruk.add(mesaj);
+
+
+                }
+
+
+            } };
+
+
+        TimerTask task2 = new TimerTask() {
+
+            @Override
+            public void run() {
+
+                if(!kuyruk.isEmpty()){
+
+                    try {
+                        dataOutputStream = new DataOutputStream(client.getOutputStream());
+                        dataOutputStream.writeUTF( kuyruk.poll()+"->r1 ");
+
+                        Thread.sleep(new Random().nextInt(5000));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+
+            } };
+
+
+        Timer timer1 = new Timer();
+        timer1.schedule(task1, 0,500);
+
+        Timer timer2 = new Timer();
+        timer2.schedule(task2, 0,randomtask);
+
+
+
+
+
+
+
+
+
+
+}}
