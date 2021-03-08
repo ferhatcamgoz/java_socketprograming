@@ -1,5 +1,5 @@
 # java_socketprograming
-Server-Tree Router-Client Socket App. Multi server and queue structure in routers
+Server-three Router-Client Socket App. Multi server and queue structure in routers
 ## Start Project
 server->r1->r2->r3->client
 
